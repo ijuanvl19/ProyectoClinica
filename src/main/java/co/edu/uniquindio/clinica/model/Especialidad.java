@@ -1,0 +1,17 @@
+package co.edu.uniquindio.clinica.model;
+
+public enum Especialidad {
+    ANESTESIOLOGIA,
+    CARDIOLOGIA,
+    CIRUGIAGENERAL,
+    DERMATOLOGIA,
+    GINEGOLOGIA,
+    NEUROLOGIA,
+    OFTALMOLOGIA,
+    ORTOPEDIA,
+    OTORRINOLARINGOLOGIA,
+    PEDIATRIA,
+    PSIQUIATRIA,
+    UROLOGIA,
+    ONCOLOGIA,
+}
