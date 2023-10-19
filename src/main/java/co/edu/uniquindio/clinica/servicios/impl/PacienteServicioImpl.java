@@ -9,10 +9,7 @@ import co.edu.uniquindio.clinica.dto.pqrs.DetallePQRSDTO;
 import co.edu.uniquindio.clinica.dto.pqrs.ItemPQRSDTO;
 import co.edu.uniquindio.clinica.dto.pqrs.RegistroPQRDTO;
 import co.edu.uniquindio.clinica.infra.errors.ValidacionDeIntegridadE;
-import co.edu.uniquindio.clinica.model.Cita;
-import co.edu.uniquindio.clinica.model.Paciente;
-import co.edu.uniquindio.clinica.model.Pqrs;
-import co.edu.uniquindio.clinica.model.EstadoUsuario;
+import co.edu.uniquindio.clinica.model.*;
 import co.edu.uniquindio.clinica.repositorios.CitaRepo;
 import co.edu.uniquindio.clinica.repositorios.PQRSRepo;
 import co.edu.uniquindio.clinica.repositorios.PacienteRepo;
@@ -20,6 +17,7 @@ import co.edu.uniquindio.clinica.servicios.interfaces.PacienteServicios;
 import co.edu.uniquindio.clinica.servicios.validaciones.registros.ValidacionDeDuplicados;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +42,9 @@ public class PacienteServicioImpl implements PacienteServicios {
     @Override
     public int registrarse(RegistroPacienteDTO pacienteDTO){
         validacion.validarPaciente(pacienteDTO);
-        Paciente paciente = pacienteRepo.save(new Paciente(pacienteDTO));
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String passwordEncriptada = encoder.encode( pacienteDTO.password() );
+        Paciente paciente = pacienteRepo.save(new Paciente(pacienteDTO,passwordEncriptada));
         paciente.setPasswd(passwordEncoder.encode(pacienteDTO.password()));
         return paciente.getCodigo();
     }
@@ -122,7 +122,7 @@ public class PacienteServicioImpl implements PacienteServicios {
     }
     @Override
     public List<ItemCitaDTO> listarCitasPaciente(int codigoPaciente) throws Exception {
-        List<Cita> citas = citaRepo.findAllByPacienteCodigo(codigoPaciente);
+        List<Cita> citas = citaRepo.findByEstadoAndPacienteCodigo(EstadoCita.PROGRAMADA, codigoPaciente);
         if(citas.isEmpty()){
             throw new ValidationException("No existen citas creadas para el paciente "+codigoPaciente);
         }

@@ -44,8 +44,5 @@ public class Mensaje implements Serializable {
         this.setContenido(datos.mensaje());
         this.setCuenta(cuenta);
         this.setPqrs(pqrs);
-        this.setMensaje(mensaje);
-        System.out.println(this.mensaje);
-        System.out.println(datos.mensaje());
     }
 }

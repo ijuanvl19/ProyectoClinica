@@ -42,21 +42,21 @@ public class DiaLibreServiciosTest {
     @Test
     @Sql("classpath:dataset.sql")
     public void updateTest() throws Exception {
-        DiaLibreDTO guardado = diaLibreServicios.obtener(1);
+        DiaLibreDTO guardado = diaLibreServicios.obtener(6);
         DiaLibreDTO modificado = new DiaLibreDTO(
                 guardado.codigo(),
                 guardado.codigoMedico(),
                 LocalDate.of(2024,12,15)
         );
         diaLibreServicios.update(modificado);
-        DiaLibreDTO objetoModificado = diaLibreServicios.obtener(1);
+        DiaLibreDTO objetoModificado = diaLibreServicios.obtener(6);
         Assertions.assertEquals(LocalDate.of(2024,12,15), objetoModificado.fecha());
     }
 
     @Test
     @Sql("classpath:dataset.sql")
     public void eliminarTest() throws Exception {
-        diaLibreServicios.eliminar(1);
+        diaLibreServicios.eliminar(6);
         Assertions.assertThrows(Exception.class, () -> diaLibreServicios.obtener(1));
     }
     @Test

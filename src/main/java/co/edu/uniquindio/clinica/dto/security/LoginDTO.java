@@ -1,4 +1,4 @@
-package co.edu.uniquindio.clinica.dto;
+package co.edu.uniquindio.clinica.dto.security;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

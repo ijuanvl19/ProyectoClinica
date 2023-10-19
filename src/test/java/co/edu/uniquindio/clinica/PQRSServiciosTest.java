@@ -38,11 +38,11 @@ public class PQRSServiciosTest {
     private MensajeServiciosImpl mensajeServicios;
 
     @Test
-    public void crearPQRS() {
+    public void crearPQRSTest() {
         List<HorarioDTO> horarios = new ArrayList<>();
         int paciente = pacienteServicio.registrarse(new RegistroPacienteDTO("24567234", "Pepito Perez", "5454545", "url_foto", Ciudad.ARMENIA, LocalDate.of(2000,10,10), "Sin alergias", Eps.ALIANSALUD, TipoSangre.A_NEGATIVO, "pepito@email.com", "123"));
         int medico = medicoServicio.crearMedico(new RegistroMedicoDTO("Zayra Parra", "768786", Ciudad.ARMENIA, Especialidad.PEDIATRIA,"879896", "zay@gmail.com","111", "url-foto",horarios));
-        DetalleCitaDTO cita = citaServicios.agendarCita(new AgendarCitaDTO(paciente,medico,LocalDateTime.now(), LocalDateTime.of(2023,10,30,10,30), "motivo", EstadoCita.PROGRAMADA, Especialidad.PSIQUIATRIA));
+        DetalleCitaDTO cita = citaServicios.agendarCita(new AgendarCitaDTO(paciente,medico,LocalDateTime.now(), LocalDateTime.of(2023,10,30,10,30), "motivo", Especialidad.PSIQUIATRIA));
         RegistroPQRDTO datos = new RegistroPQRDTO(
                 cita.codigoCita(),
                 "motivo",
@@ -59,12 +59,12 @@ public class PQRSServiciosTest {
     @Test
     @Sql("classpath:dataset.sql")
     public void cambiarEstadoPQRS() {
-        DetallePQRSDTO guardado = pqrServicio.verDetallePQRS(1);
+        DetallePQRSDTO guardado = pqrServicio.verDetallePQRS(6);
         pqrServicio.cambiarEstadoPQRS(
                 guardado.codigo(),
                 EstadoPQRS.RESUELTO
         );
-        DetallePQRSDTO objetoModificado = pqrServicio.verDetallePQRS(1);
+        DetallePQRSDTO objetoModificado = pqrServicio.verDetallePQRS(6);
         Assertions.assertEquals(EstadoPQRS.RESUELTO, objetoModificado.estado());
     }
 
@@ -78,23 +78,22 @@ public class PQRSServiciosTest {
 
     @Test
     @Sql("classpath:dataset.sql")
-    public void responderPQRS() {/*
+    public void responderPQRS() {
         List<HorarioDTO> horarios = new ArrayList<>();
         int paciente = pacienteServicio.registrarse(new RegistroPacienteDTO("24567234", "Pepito Perez", "5454545", "url_foto", Ciudad.ARMENIA, LocalDate.of(2000,10,10), "Sin alergias", Eps.ALIANSALUD, TipoSangre.A_NEGATIVO, "pepito@email.com", "123"));
         int medico = medicoServicio.crearMedico(new RegistroMedicoDTO("Zayra Parra", "768786", Ciudad.ARMENIA, Especialidad.PEDIATRIA,"879896", "zay@gmail.com","111", "url-foto",horarios));
-        DetalleCitaDTO cita = citaServicios.agendarCita(new AgendarCitaDTO(paciente,medico,LocalDateTime.now(), LocalDateTime.of(2023,10,30,10,30), "motivo", EstadoCita.PROGRAMADA, Especialidad.PSIQUIATRIA));
-        int pqrs = pqrServicio.crearPQRS(new RegistroPQRDTO(cita.codigoCita(),"motivo", paciente, "tipo",EstadoPQRS.ENPROCESO, LocalDateTime.now()));
-        int mensaje = mensajeServicios.crear(new RegistroRespuestaDTO(paciente,pqrs,1,"Hola"));*/
+        DetalleCitaDTO cita = citaServicios.agendarCita(new AgendarCitaDTO(paciente,medico,LocalDateTime.now(), LocalDateTime.of(2023,10,30,10,30), "motivo", Especialidad.PSIQUIATRIA));
+        int pqrs = pqrServicio.crearPQRS(new RegistroPQRDTO(cita.codigoCita(),"Hola", paciente, "tipo",EstadoPQRS.ENPROCESO, LocalDateTime.now()));
         RegistroRespuestaDTO respuesta = new RegistroRespuestaDTO(
-                1,
-                1,
+                paciente,
+                pqrs,
                 1,//???????
-                "Como estás"
+                "Buena tarde, ¿en qué le puedo servir?"
 
         );
         int nuevo = pqrServicio.responderPQRS(respuesta);
-        String primerMensaje = mensajeServicios.obtener(respuesta.codigoMensaje()).mensajesAsociados();
-        String segundoMensaje = mensajeServicios.obtener(respuesta.codigoMensaje()).contenido();
+        String primerMensaje = mensajeServicios.obtener(nuevo).mensajesAsociados();
+        String segundoMensaje = mensajeServicios.obtener(nuevo).contenido();
         System.out.println(primerMensaje);
         System.out.println(segundoMensaje);
         Assertions.assertNotEquals(0, nuevo);

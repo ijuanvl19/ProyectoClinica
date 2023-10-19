@@ -18,6 +18,7 @@ import co.edu.uniquindio.clinica.servicios.validaciones.registros.ValidacionDeDu
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,7 +40,9 @@ public class MedicoServicioImpl implements MedicoServicios {
     @Override
     public int crearMedico(RegistroMedicoDTO medicoDTO) {
         validacion.validarMedico(medicoDTO);
-        Medico medico = medicoRepo.save(new Medico(medicoDTO));
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String passwordEncriptada = encoder.encode( medicoDTO.password() );
+        Medico medico = medicoRepo.save(new Medico(medicoDTO, passwordEncriptada));
         asignarHorariosMedico(medico, medicoDTO.horarios());
         System.out.println("Medico " + medico.getCodigo() + " creado");
         return medico.getCodigo();

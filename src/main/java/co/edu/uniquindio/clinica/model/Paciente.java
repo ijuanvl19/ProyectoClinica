@@ -32,10 +32,10 @@ public class Paciente extends Usuario implements Serializable {
     @OneToMany(mappedBy = "paciente")
     private List<Cita> citas;
 
-    public Paciente(RegistroPacienteDTO pacienteDTO) {
+    public Paciente(RegistroPacienteDTO pacienteDTO, String passwd) {
         //datos de la cuenta
         this.setCorreo(pacienteDTO.correo());
-        this.setPasswd(pacienteDTO.password());
+        this.setPasswd(passwd);
 
         //datos del usuario
         this.setNombre(pacienteDTO.nombre());

@@ -1,4 +1,4 @@
-package co.edu.uniquindio.clinica.infra.security;
+package co.edu.uniquindio.clinica.dto.security;
 
 public record DatosJWTtoken(
         String jwtToken

@@ -27,14 +27,14 @@ public class Medico extends Usuario implements Serializable {
     @OneToMany(mappedBy = "medico")
     private List<Cita> citas;
 
-    public Medico(RegistroMedicoDTO medicoDTO){
+    public Medico(RegistroMedicoDTO medicoDTO, String pasword){
         this.setCedula(medicoDTO.cedula());
         this.setTelefono(medicoDTO.telefono());
         this.setNombre(medicoDTO.nombre());
         this.setEspecialidad(medicoDTO.especialidad());
         this.setCiudad(medicoDTO.ciudad());
         this.setCorreo(medicoDTO.correo());
-        this.setPasswd(medicoDTO.password());
+        this.setPasswd(pasword);
         this.setUrlFoto(medicoDTO.urlFoto());
         this.setEstado(EstadoUsuario.ACTIVO);
     }

@@ -37,11 +37,11 @@ public class AtencionServiciosTest {
     private MedicoServicioImpl medicoServicio;
 
     @Test
-    public void crearTest() throws Exception {
+    public void crearAtencionTest() throws Exception {
         List<HorarioDTO> horarios = new ArrayList<>();
         int paciente = pacienteServicio.registrarse(new RegistroPacienteDTO("24567234", "Pepito Perez", "5454545", "url_foto", Ciudad.ARMENIA, LocalDate.of(2000,10,10), "Sin alergias", Eps.ALIANSALUD, TipoSangre.A_NEGATIVO, "pepito@email.com", "123"));
         int medico = medicoServicio.crearMedico(new RegistroMedicoDTO("Zayra Parra", "768786", Ciudad.ARMENIA, Especialidad.PEDIATRIA,"879896", "zay@gmail.com","111", "url-foto",horarios));
-        DetalleCitaDTO cita = citaServicios.agendarCita(new AgendarCitaDTO(paciente,medico,LocalDateTime.now(), LocalDateTime.of(2023,10,30,10,30), "motivo", EstadoCita.PROGRAMADA, Especialidad.PSIQUIATRIA));
+        DetalleCitaDTO cita = citaServicios.agendarCita(new AgendarCitaDTO(paciente,medico,LocalDateTime.now(), LocalDateTime.of(2023,10,30,10,30), "motivo", Especialidad.PSIQUIATRIA));
 
         RegistroAtencionDTO atencionDTO = new RegistroAtencionDTO(
                 cita.codigoCita(),

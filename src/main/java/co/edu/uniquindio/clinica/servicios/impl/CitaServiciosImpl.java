@@ -4,11 +4,9 @@ import co.edu.uniquindio.clinica.dto.cita.CancelamientoCitaDTO;
 import co.edu.uniquindio.clinica.dto.cita.DetalleAtencionMedicaDTO;
 import co.edu.uniquindio.clinica.dto.cita.ItemCitaDTO;
 import co.edu.uniquindio.clinica.dto.cita.DetalleCitaDTO;
+import co.edu.uniquindio.clinica.dto.paciente.FiltroBusquedaDTO;
 import co.edu.uniquindio.clinica.infra.errors.ValidacionDeIntegridadE;
-import co.edu.uniquindio.clinica.model.Atencion;
-import co.edu.uniquindio.clinica.model.Cita;
-import co.edu.uniquindio.clinica.model.Medico;
-import co.edu.uniquindio.clinica.model.Paciente;
+import co.edu.uniquindio.clinica.model.*;
 import co.edu.uniquindio.clinica.repositorios.AtencionRepo;
 import co.edu.uniquindio.clinica.repositorios.CitaRepo;
 import co.edu.uniquindio.clinica.repositorios.MedicoRepo;
@@ -55,7 +53,7 @@ public class CitaServiciosImpl implements CitaServicios {
             throw new ValidacionDeIntegridadE("No existen médicos disponibles para este " +
                     "horario y especialidad");
         }
-        var cita = new Cita(LocalDateTime.now(), datos.fecha(), datos.motivo(), datos.estado(), medico, paciente);
+        var cita = new Cita(LocalDateTime.now(), datos.fecha(), datos.motivo(), EstadoCita.PROGRAMADA, medico, paciente);
         citaRepo.save(cita);
         return new DetalleCitaDTO(cita);
         /*toma de decisiones, comunicación, resolución de porblemas, coordinación*/
@@ -95,12 +93,24 @@ public class CitaServiciosImpl implements CitaServicios {
     }
 
     @Override
-    public void listarHistorialPaciente(int codigoPaciente) {
-
+    public List<ItemCitaDTO> listarHistorialPaciente(int codigoPaciente) {
+        List<Cita> citas = citaRepo.findAllByPacienteCodigo(codigoPaciente);
+        if(citas.isEmpty()){
+            throw new ValidationException("No existe historial de citas para el paciente "+codigoPaciente);
+        }
+        return citas.stream()
+                .map(ItemCitaDTO::new)
+                .toList();
     }
 
+
     @Override
-    public void listarCitasPendientes(int codigoPaciente) {
+    public List<ItemCitaDTO> listarCitasPendientesPaciente(int codigoPaciente) {
+        List<Cita> citas = citaRepo.findByEstadoAndPacienteCodigo(EstadoCita.PROGRAMADA, codigoPaciente);
+        if (citas.isEmpty()) {
+            throw new ValidationException("No hay citas pendientes");
+        }
+        return citas.stream().map(ItemCitaDTO::new).toList();
 
     }
 
@@ -119,13 +129,24 @@ public class CitaServiciosImpl implements CitaServicios {
     }
 
     @Override
-    public void filtrarCitasPorMedico() {
-
+    public List<ItemCitaDTO> filtrarCitasPorMedico(int idMedico) {
+        List<Cita> citas = citaRepo.findAllByMedicoCodigo(idMedico);
+        if(citas.isEmpty()){
+            throw new ValidationException("No existen citas asociandas al medico "+idMedico);
+        }
+        return citas.stream().map(ItemCitaDTO::new).toList();
     }
 
     @Override
-    public void filtrarCitasPorFecha() {
-
+    public List<ItemCitaDTO> filtrarCitasPorFecha(FiltroBusquedaDTO filtroBusquedaDTO) {
+        int codigoPaciente = filtroBusquedaDTO.codigoPaciente();
+        LocalDateTime fechaInicio = filtroBusquedaDTO.fechaInicio();
+        LocalDateTime fechaFin = filtroBusquedaDTO.fechaFin();
+        List<Cita> citas = citaRepo.findCitaByPacienteCodigoAndFechaCitaBetween(codigoPaciente, fechaInicio, fechaFin);
+        if(citas.isEmpty()){
+            throw new ValidationException("No existen citas en esa fecha");
+        }
+        return citas.stream().map(ItemCitaDTO::new).toList();
     }
 
     @Override

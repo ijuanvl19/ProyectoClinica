@@ -1,7 +1,7 @@
 package co.edu.uniquindio.clinica.servicios.impl;
 
-import co.edu.uniquindio.clinica.infra.security.DatosJWTtoken;
-import co.edu.uniquindio.clinica.dto.LoginDTO;
+import co.edu.uniquindio.clinica.dto.security.DatosJWTtoken;
+import co.edu.uniquindio.clinica.dto.security.LoginDTO;
 import co.edu.uniquindio.clinica.infra.security.TokenService;
 import co.edu.uniquindio.clinica.model.Cuenta;
 import co.edu.uniquindio.clinica.servicios.interfaces.AutenticacionServicios;

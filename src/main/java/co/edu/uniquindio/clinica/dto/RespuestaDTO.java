@@ -15,7 +15,7 @@ public record RespuestaDTO(
                 mensaje.getContenido(),
                 mensaje.getCuenta().getCorreo(),
                 mensaje.getFecha(),
-                mensaje.getMensaje().getContenido()
+                mensaje.getPqrs().getMotivo()
         );
     }
 

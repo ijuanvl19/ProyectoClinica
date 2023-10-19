@@ -64,7 +64,7 @@ public class MedicoServiciosTest {
     @Test
     @Sql("classpath:dataset.sql")
     public void acualizarMedico() throws Exception {
-        DetalleMedicoDTO guardado = medicoServicio.obtenerMedico(6);
+        DetalleMedicoDTO guardado = medicoServicio.obtenerMedico(26);
         DetalleMedicoDTO modificado = new DetalleMedicoDTO(
                 guardado.codigo(),
                 guardado.cedula(),
@@ -78,14 +78,14 @@ public class MedicoServiciosTest {
         );
 
         medicoServicio.acualizarMedico(modificado);
-        DetalleMedicoDTO objetoModificado = medicoServicio.obtenerMedico(6);
+        DetalleMedicoDTO objetoModificado = medicoServicio.obtenerMedico(26);
         Assertions.assertEquals("111111", objetoModificado.telefono());
     }
 
     @Test
     @Sql("classpath:dataset.sql")
     public void eliminarMedico() throws Exception {
-        medicoServicio.eliminarMedico(6);
+        medicoServicio.eliminarMedico(26);
         Assertions.assertThrows(Exception.class, () -> medicoServicio.obtenerMedico(6));
     }
 
@@ -99,16 +99,16 @@ public class MedicoServiciosTest {
     @Test
     @Sql("classpath:dataset.sql")
     public void listarCitasPendientesTest() {
-        List<ItemCitaDTO> lista = medicoServicio.listarCitasPendientes(6);
+        List<ItemCitaDTO> lista = medicoServicio.listarCitasPendientes(26);
         lista.forEach(System.out::println);
-        Assertions.assertEquals(1, lista.size());
+        Assertions.assertEquals(3, lista.size());
     }
     @Test
     public void atenderCitaTest() throws Exception {
         List<HorarioDTO> horarios = new ArrayList<>();
         int paciente = pacienteServicio.registrarse(new RegistroPacienteDTO("24567234", "Pepito Perez", "5454545", "url_foto", Ciudad.ARMENIA, LocalDate.of(2000,10,10), "Sin alergias", Eps.ALIANSALUD, TipoSangre.A_NEGATIVO, "pepito@email.com", "123"));
         int medico = medicoServicio.crearMedico(new RegistroMedicoDTO("Zayra Parra", "768786", Ciudad.ARMENIA, Especialidad.PEDIATRIA,"879896", "zay@gmail.com","111", "url-foto",horarios));
-        DetalleCitaDTO cita = citaServicios.agendarCita(new AgendarCitaDTO(paciente,medico, LocalDateTime.now(), LocalDateTime.of(2023,10,30,10,30), "motivo", EstadoCita.PROGRAMADA, Especialidad.PSIQUIATRIA));
+        DetalleCitaDTO cita = citaServicios.agendarCita(new AgendarCitaDTO(paciente,medico, LocalDateTime.now(), LocalDateTime.of(2023,10,30,10,30), "motivo", Especialidad.PSIQUIATRIA));
         RegistroAtencionDTO registroAtencionDTO = new RegistroAtencionDTO(
                 cita.codigoCita(),
                 medico,
@@ -124,7 +124,7 @@ public class MedicoServiciosTest {
     @Test
     public void agendarDiaLibreTest() throws Exception {
         List<HorarioDTO> horarios = new ArrayList<>();
-        int medico = medicoServicio.crearMedico(new RegistroMedicoDTO("Zayra Parra", "768786", Ciudad.ARMENIA, Especialidad.PEDIATRIA,"879896", "zay@gmail.com","111", "url-foto",horarios));
+        int medico = medicoServicio.crearMedico(new RegistroMedicoDTO("Frank soto", "768786", Ciudad.ARMENIA, Especialidad.CARDIOLOGIA,"879896", "frank@gmail.com","111", "url-foto",horarios));
         DiaLibreDTO diaLibreDTO = new DiaLibreDTO(
                 1,
                 medico,
@@ -137,9 +137,9 @@ public class MedicoServiciosTest {
     @Test
     @Sql("classpath:dataset.sql")
     public void listarCitasRealizadasMedicoTest() throws Exception {
-        List<ItemCitaDTO> lista = medicoServicio.listarCitasRealizadasMedico(6);
+        List<ItemCitaDTO> lista = medicoServicio.listarCitasRealizadasMedico(26);
         lista.forEach(System.out::println);
-        Assertions.assertEquals(1, lista.size());
+        Assertions.assertEquals(3, lista.size());
     }
 
 }

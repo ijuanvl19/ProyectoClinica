@@ -13,7 +13,6 @@ public record AgendarCitaDTO(
         LocalDateTime fechaCreacion,
         @NotNull @Future LocalDateTime fecha,
         String motivo,
-        EstadoCita estado,
         Especialidad especialidad
         ) {
 }

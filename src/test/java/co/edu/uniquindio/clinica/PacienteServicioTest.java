@@ -55,7 +55,7 @@ public class PacienteServicioTest {
     @Sql("classpath:dataset.sql")
     public void actualizarTest() throws Exception {
         //Para actualizar el paciente primero lo obtenemos
-        DetallePacienteDTO guardado = pacienteServicio.verDetallePaciente(1);
+        DetallePacienteDTO guardado = pacienteServicio.verDetallePaciente(6);
         //Le modificamos el número de teléfono, lo demás lo dejamos igual
         DetallePacienteDTO modificado = new DetallePacienteDTO(
                 guardado.codigo(),
@@ -72,7 +72,7 @@ public class PacienteServicioTest {
         //Se invoca el servicio de actualizar los datos
         pacienteServicio.editarPerfil(modificado);
         //Se obtiene nuevamente el paciente para comprobar que sí se haya actualizado
-        DetallePacienteDTO objetoModificado = pacienteServicio.verDetallePaciente(1);
+        DetallePacienteDTO objetoModificado = pacienteServicio.verDetallePaciente(6);
         //Se comprueba que el teléfono del paciente sea el que se le asignó en la actualización
         Assertions.assertEquals("111111", objetoModificado.telefono());
     }
@@ -81,9 +81,9 @@ public class PacienteServicioTest {
     @Sql("classpath:dataset.sql")
     public void eliminarTest() throws Exception {
         //Se borra por ejemplo el paciente con el código 1
-        pacienteServicio.eliminarCuenta(1);
+        pacienteServicio.eliminarCuenta(6);
         //Si intentamos buscar un paciente con el código del paciente borrado debemos obtener una excepción indicando que ya no existe
-        Assertions.assertThrows(Exception.class, () -> pacienteServicio.verDetallePaciente(1));
+        Assertions.assertThrows(Exception.class, () -> pacienteServicio.verDetallePaciente(6));
     }
 
     @Test
@@ -95,11 +95,11 @@ public class PacienteServicioTest {
         //Si en el dataset creamos 5 pacientes, entonces el tamaño de la lista debe ser 5
         Assertions.assertEquals(5, lista.size());
     }
-
+//solo lista las programadas
     @Test
     @Sql("classpath:dataset.sql")
     public void listarCitasPacienteTest() throws Exception {
-        List<ItemCitaDTO> lista = pacienteServicio.listarCitasPaciente(1);
+        List<ItemCitaDTO> lista = pacienteServicio.listarCitasPaciente(6);
         lista.forEach(System.out::println);
         Assertions.assertEquals(1, lista.size());
     }
@@ -108,9 +108,9 @@ public class PacienteServicioTest {
     @Sql("classpath:dataset.sql")
     public void filtrarCitasPorFechaTest(){
         FiltroBusquedaDTO filtroBusquedaDTO = new FiltroBusquedaDTO(
-                1,
+                6,
                 LocalDateTime.of(2023,10,12,10,30),
-                LocalDateTime.of(2023,11,12,10,30)
+                LocalDateTime.of(2023,12,12,10,30)
         );
         List<ItemCitaDTO> lista = pacienteServicio.filtrarCitasPorFecha(filtroBusquedaDTO);
         lista.forEach(System.out::println);
@@ -120,15 +120,15 @@ public class PacienteServicioTest {
     @Test
     @Sql("classpath:dataset.sql")
     public void filtrarCitasPorMedicoTest() {
-        List<ItemCitaDTO> lista = pacienteServicio.filtrarCitasPorMedico(6);
+        List<ItemCitaDTO> lista = pacienteServicio.filtrarCitasPorMedico(26);
         lista.forEach(System.out::println);
-        Assertions.assertEquals(1, lista.size());
+        Assertions.assertEquals(3, lista.size());
     }
 
     @Test
     @Sql("classpath:dataset.sql")
     public void listarPQRSPacienteTest() {
-        List<ItemPQRSDTO> lista = pacienteServicio.listarPQRSPaciente(1);
+        List<ItemPQRSDTO> lista = pacienteServicio.listarPQRSPaciente(6);
         lista.forEach(System.out::println);
         Assertions.assertEquals(1, lista.size());
     }
